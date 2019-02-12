@@ -22,3 +22,4 @@ for i = 1:length(scenarios)
         send_report_via_email(subject,strcat(scenario ,' has been failed at: ' , char(datetime),':',err.message));
     end  
 end
+ 

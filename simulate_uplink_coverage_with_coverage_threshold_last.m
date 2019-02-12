@@ -1,15 +1,16 @@
-function [Pcov_h, Pcov_m] = simulate_uplink_coverage_with_nrb(params)
+function [Pcov_h, Pcov_m] = simulate_uplink_coverage_with_coverage_threshold(params)
 simulation_area =  (params.simulation_area_side(2) - params.simulation_area_side(1))^2;
-points = numel(params.N_RB);
-PoCoverageH = zeros(params.space_realizations , params.time_slots );
-PoCoverageM = zeros(params.space_realizations , params.time_slots );
-for p = 1:points
+points.HTC = numel(params.Threshold.HTC);
+points.MTC = numel(params.Threshold.MTC);
+PoCoverageH = zeros(points.HTC,params.space_realizations , params.time_slots );
+PoCoverageM = zeros(points.MTC,params.space_realizations , params.time_slots );
 fprintf('\n')
-disp(['Number of Resource Blocks: ' , num2str(params.N_RB(p))]);
+%disp(['coverage Threshold: ' , num2str(params.Threshold(p))]);
 disp(['Smallcell Density: ' , num2str(params.LA_B*1e6)]);
 disp(['HTC  Density: ' , num2str(params.LA_H*1e6)]);
 disp(['MTC Density: ' , num2str(params.LA_M)]);
 disp(['MTC Activity Ratio: ' , num2str(params.rho_m)]);
+disp(['HTC QOS Threshold: ' , num2str(params.Threshold.HTC_QOS)]);
 disp(['Path Loss Parameters: ' ,'alpha=', num2str(params.SEPL.alpha) ,' beta=', num2str(params.SEPL.beta)]);
 disp('          10%       20%       30%       40%       50%       60%       70%       80%       90%       100%');
 disp('|.........|.........|.........|.........|.........|.........|.........|.........|.........|.........|');
@@ -38,12 +39,13 @@ for m = 1:params.space_realizations;
     locations.MTC = params.simulation_area_side(1) + 2 * params.simulation_area_side(2).* rand(N_users_MTC, 2);
     
     % Association
-    
-    [association,loads,distances] = associate_nodes(locations,params.aggregation_mode);
+    [association,~,distances] = associate_nodes(locations,params.aggregation_mode);
     N_cells_active = association.No_Active_Cells;
-    RBs = randi(params.N_RB(p),1,N_users_MTC);
-
+    RBs = randi(params.N_RB,1,N_users_MTC);
     association.MTC_to_BS(2,:)= RBs(1,:);   % each M2M node selects a carrier from N carriers randomly (uniform distribution)
+
+%    figure
+%    visualize_the_network(params)
     
     % Power Control
     server_MTC_P = params.MTC.Pmin * exp(params.SEPL.alpha .* distances.MTC_to_Server .^ params.SEPL.beta);
@@ -55,11 +57,13 @@ for m = 1:params.space_realizations;
     for server = 1:N_cells_active
         HTC_MTC_Pair(server).HTCs = find( association.HTC_to_BS == server);
         HTC_MTC_Pair(server).MTCs = find( association.MTC_to_BS(1,:) == server);
-        for r = 1:params.N_RB
-            y = [params.H(r,1) params.H(r,2)];
-            ordered_h(r,:) = order_exp(y);
-        end
+%         for r = 1:params.N_RB
+%             y = [params.H(r,1) params.H(r,2)];
+%             ordered(r,:) = order_exp(y);
+%         end
     end
+    
+   
     
     Interfers_h = zeros(N_cells_active,1);
     for server = 1:N_cells_active
@@ -82,7 +86,7 @@ for m = 1:params.space_realizations;
         H_m = params.H(m+t:N_cells_active+m+t-1 , m+t: N_users_MTC+m+t-1);
         toss = randi(10);
         H_h = params.H(m+t+toss:N_cells_active+m+t+toss-1 , m+t+toss: N_users_HTC+m+t+toss-1);
-
+        
 %         for srvr = 1:N_cells_active
 %             htcs = HTC_MTC_Pair(srvr).HTCs;
 %             mtcs = HTC_MTC_Pair(srvr).MTCs;
@@ -90,15 +94,14 @@ for m = 1:params.space_realizations;
 %             H_m(srvr,mtcs) = ordered(indx+1,1);
 %             H_h(srvr,htcs) = ordered(indx+1,2);
 %         end
-        for u_m = 1:N_users_MTC
-            server_m = association.MTC_to_BS(1,u_m);
-            H_m(server_m,u_m) = ordered_h(mod(u_m,params.N_RB(p))+1,1) ;
-        end
-        for u_h = 1:N_users_HTC
-            server_h = association.HTC_to_BS(1,u_h);
-            H_h(server_h,u_h) = ordered_h(mod(u_h,params.N_RB(p))+1,2);
-        end
-        
+%         for u_m = 1:N_users_MTC
+%             server_m = association.MTC_to_BS(1,u_m);
+%             H_m(server_m,u_m) = ordered(mod(u_m,params.N_RB)+1,1) ;
+%         end
+%         for u_h = 1:N_users_HTC
+%             server_h = association.HTC_to_BS(1,u_h);
+%             H_h(server_h,u_h) = ordered(mod(u_h,params.N_RB)+1,2);
+%         end
         
         R_h = H_h .* bsxfun(@times,server_HTC_P, exp(-params.SEPL.alpha .* distances.HTC_to_BS .^ params.SEPL.beta))  ;
         %R_m = H_m .* bsxfun(@times,server_MTC_P, exp(-params.SEPL.alpha .* distances.MTC_to_BS .^ params.SEPL.beta))  ;
@@ -125,12 +128,12 @@ for m = 1:params.space_realizations;
             else
                 I_m_h(user_m) = sum(R_h(server_m,Interfers_h(Interfers_h~=0)));
             end
-            Isic(user_m) = H_m(server_m,user_m) * params.HTC.Pmin;
+            %Isic(user_m) = H_m(server_m,user_m) * params.HTC.Pmin;
         end
         for user_h = 1:N_users_HTC
             server_h = association.HTC_to_BS(user_h);
             users_m = find(association.MTC_to_BS(1,:) == server_h); % find MTC nodes associated to this server
-            user_m = users_m(1); 
+            user_m = users_m(1);
             gh = H_h(server_h,user_h);
             gm = H_m(server_h,user_m);
             x = order_exp([gm gh]);
@@ -159,6 +162,7 @@ for m = 1:params.space_realizations;
 %         end
          SINR_h = S_h ./ (I_h + I_h_m + Inoma +  params.No);   % Noise here is per only one RB !!!!!!
          SINR_m = S_m ./ (I_m +  I_m_h + params.No);% +  +    % Noise here is per only one RB !!!!!!
+         
          for u_m = 1:N_users_MTC
              server_m = association.MTC_to_BS(1,u_m);
              u_h = HTC_MTC_Pair(server_m).HTCs;
@@ -166,20 +170,23 @@ for m = 1:params.space_realizations;
                 SINR_m(u_m) = 0;
              end   
          end
-         
-            PoCoverageH(m,t) = sum(SINR_h > params.Threshold.HTC) / N_users_HTC;
-            PoCoverageM(m,t) = sum(SINR_m > params.Threshold.MTC) / N_users_MTC;
+        
+        for p = 1:points.HTC
+            PoCoverageH(p,m,t) = sum(SINR_h > params.Threshold.HTC(p)) / (N_users_HTC);
+        end
+        %Ph_qos = sum(SINR_h > params.Threshold.HTC_QOS) / N_users_HTC;
+        for p = 1:points.MTC
+            PoCoverageM(p,m,t) = sum(SINR_m > params.Threshold.MTC(p)) / N_users_MTC;
+        end
 
     end
     
 end
 
-    normfact = params.space_realizations * params.time_slots ;% * simulation_area;
-    Pcov_h(p) = sum(sum(PoCoverageH))/ normfact
-    Pcov_m(p) = sum(sum(PoCoverageM))/ normfact
-    fprintf('\n');
+normfact = params.space_realizations * params.time_slots ;% * simulation_area;
+Pcov_h = sum(sum(PoCoverageH,3),2)/ normfact;
+Pcov_m = sum(sum(PoCoverageM,3),2)/ normfact;
 
 display('\');
 toc;
-end
 end

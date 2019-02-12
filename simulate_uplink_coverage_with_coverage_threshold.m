@@ -59,7 +59,7 @@ for m = 1:params.space_realizations;
         HTC_MTC_Pair(server).MTCs = find( association.MTC_to_BS(1,:) == server);
         for r = 1:params.N_RB
             y = [params.H(r,1) params.H(r,2)];
-            ordered(r,:) = order_exp(y);
+            ordered_h(r,:) = order_exp(y);
         end
     end
     
@@ -87,21 +87,14 @@ for m = 1:params.space_realizations;
         toss = randi(10);
         H_h = params.H(m+t+toss:N_cells_active+m+t+toss-1 , m+t+toss: N_users_HTC+m+t+toss-1);
         
-        for srvr = 1:N_cells_active
-            htcs = HTC_MTC_Pair(srvr).HTCs;
-            mtcs = HTC_MTC_Pair(srvr).MTCs;
-            indx = mod(srvr,params.N_RB);
-            H_m(srvr,mtcs) = ordered(indx+1,1);
-            H_h(srvr,htcs) = ordered(indx+1,2);
+        for u_m = 1:N_users_MTC
+            server_m = association.MTC_to_BS(1,u_m);
+            H_m(server_m,u_m) = ordered_h(mod(u_m,params.N_RB)+1,1) ;
         end
-%         for u_m = 1:N_users_MTC
-%             server_m = association.MTC_to_BS(1,u_m);
-%             H_m(server_m,u_m) = ordered(mod(u_m,params.N_RB)+1,1) ;
-%         end
-%         for u_h = 1:N_users_HTC
-%             server_h = association.HTC_to_BS(1,u_h);
-%             H_h(server_h,u_h) = ordered(mod(u_h,params.N_RB)+1,2);
-%         end
+        for u_h = 1:N_users_HTC
+            server_h = association.HTC_to_BS(1,u_h);
+            H_m(server_h,u_h) = ordered_h(mod(u_h,params.N_RB)+1,2);
+        end
         
         R_h = H_h .* bsxfun(@times,server_HTC_P, exp(-params.SEPL.alpha .* distances.HTC_to_BS .^ params.SEPL.beta))  ;
         %R_m = H_m .* bsxfun(@times,server_MTC_P, exp(-params.SEPL.alpha .* distances.MTC_to_BS .^ params.SEPL.beta))  ;

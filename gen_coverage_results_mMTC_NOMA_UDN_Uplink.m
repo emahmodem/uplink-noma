@@ -10,7 +10,7 @@ function [ output_args ] = gen_coverage_results_mMTC_NOMA_UDN_Uplink(sim)
 
 
 % Simulation Parameters
-params.simulation_area_side = [-500 500];    % simulation area side to side
+params.simulation_area_side = [-200 200];    % simulation area side to side
 params.space_realizations = 10;
 params.time_slots = 10;
 params.N_RB = 100;
@@ -45,7 +45,7 @@ params.SEPL.beta = 1/2;
 
 % Power Control Parameters
 params.MTC.Pmax = 2e-3 ;                    % Uplink Transmit power of M2M nodes in watts 20 dBm
-params.MTC.Pmin_dBm = -110;                   % Min. received power at the base station in dBms > BS sensitivity
+params.MTC.Pmin_dBm = -100;                   % Min. received power at the base station in dBms > BS sensitivity
 params.MTC.Pmin = 10^(params.MTC.Pmin_dBm/10)* 1e-3;
 params.HTC.Pmax = 20e-3 ;                         % Uplink Transmit power of M2M nodes in watts 20 dBm
 params.HTC.Pmin_dBm = -90;                   % Min. received power at the base station in watts > BS sensitivity
@@ -57,7 +57,7 @@ params.HTC.Pmin = 10^(params.HTC.Pmin_dBm/10)* 1e-3 ;
 params.aggregation_mode = 'C2A';
 params.LA_B = 1000*1e-6 ;                   % Small Cell Denisty (cells/m^2)
 params.LA_H = 500*1e-6 ;
-params.LA_M = 0.5        ;                  % MTC nodes density  (nodes/m^2)
+params.LA_M = 0.3        ;                  % MTC nodes density  (nodes/m^2)
 params.rho_m = 0.1;
 
 params.Threshold.HTC_dB = 0 ; % dB
@@ -172,10 +172,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_Pho_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_pho_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_pho_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_pho_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_pho_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_pho_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_pho_c2a','-depsc','-r0');
         
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -261,10 +261,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_Pho_Pmo_Ratio_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_pho_pmo_ratio_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_pho_pmo_ratio_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_pho_pmo_ratio_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_pho_pmo_ratio_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_pho_pmo_ratio_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_pho_pmo_ratio_c2a','-depsc','-r0');
         
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -343,10 +343,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_NRB_C2A.mat  params LA_M Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_nrb_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_nrb_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_nrb_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_nrb_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_nrb_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_nrb_c2a','-depsc','-r0');
         
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -425,10 +425,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_MTC_Density_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_lam_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_lam_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_lam_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_lam_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_lam_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_lam_c2a','-depsc','-r0');
         
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -506,10 +506,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_MTC_Density_C2C.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_lam_c2c');
+        savefig('Uplink_Final_Results/ul_coverage_lam_c2c');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_lam_c2c','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_lam_c2c','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_lam_c2c','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_lam_c2c','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
     case 'UL_Coverage_HTC_Density_C2A'
@@ -587,10 +587,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_HTC_Density_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_lah_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_lah_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_lah_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_lah_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_lah_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_lah_c2a','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
     case 'UL_Coverage_HTC_Density_C2C'
         tic;
@@ -664,10 +664,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_HTC_Density_C2C.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_lah_c2c');
+        savefig('Uplink_Final_Results/ul_coverage_lah_c2c');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_lah_c2c','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_lah_c2c','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_lah_c2c','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_lah_c2c','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
     case 'UL_Coverage_SmallCellsDensity_C2A'
         tic;
@@ -746,10 +746,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_SmallCellsDensity_C2A.mat  params LA_H Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_las_c2a');
+        savefig('Uplink_Final_Results/ul_coverage_las_c2a');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_las_c2a','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_las_c2a','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_las_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_las_c2a','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
     case 'UL_Coverage_SmallCellsDensity_C2C'
         tic;
@@ -828,10 +828,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_SmallCellsDensity_C2C.mat  params LA_M Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_las_c2c');
+        savefig('Uplink_Final_Results/ul_coverage_las_c2c');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_las_c2c','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_las_c2c','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_las_c2c','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_las_c2c','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
     case 'UL_Coverage_CoverageThreshold_C2A'
@@ -915,11 +915,11 @@ switch(sim)
         deco.title = 'MTC ($\tau_h = 0 $dB)';
         decorate_plot(h,deco);
         
-        %         save UL_Coverage_CoverageThreshold_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        %         savefig('Uplink_Initial_Results/ul_coverage_tau_c2a');
-        %         set(gcf,'PaperPositionMode','auto')
-        %         print('Uplink_Initial_Results/ul_coverage_tau_c2a','-dpng','-r0');
-        %         print('Uplink_Initial_Results/ul_coverage_tau_c2a','-depsc','-r0');
+        save UL_Coverage_CoverageThreshold_C2A.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
+        savefig('Uplink_Final_Results/ul_coverage_tau_c2a');
+        set(gcf,'PaperPositionMode','auto')
+        print('Uplink_Final_Results/ul_coverage_tau_c2a','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_tau_c2a','-depsc','-r0');
         
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
         
@@ -1001,10 +1001,10 @@ switch(sim)
         decorate_plot(h,deco);
         
         save UL_Coverage_CoverageThreshold_C2C.mat  params LA_B Pcov_h_analy Pcov_h_simul Pcov_m_analy Pcov_m_simul
-        savefig('Uplink_Initial_Results/ul_coverage_tau_c2c');
+        savefig('Uplink_Final_Results/ul_coverage_tau_c2c');
         set(gcf,'PaperPositionMode','auto')
-        print('Uplink_Initial_Results/ul_coverage_tau_c2c','-dpng','-r0');
-        print('Uplink_Initial_Results/ul_coverage_tau_c2c','-depsc','-r0');
+        print('Uplink_Final_Results/ul_coverage_tau_c2c','-dpng','-r0');
+        print('Uplink_Final_Results/ul_coverage_tau_c2c','-depsc','-r0');
         %------------------------------------------------------------------------------------------------------------------------------------------------------------------
 end
 end
