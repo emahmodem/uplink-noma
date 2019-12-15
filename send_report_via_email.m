@@ -3,8 +3,8 @@ function [response] = send_report_via_email(subject,report)
 % Sending Email
 sending_email = 'concordia.ev.10150@gmail.com';
 mail_server = 'smtp.gmail.com';
-user_name = 'concordia.ev.10150@gmail.com';
-password = 'beinthelab@1010';
+user_name = '';
+password = '';
 
 
 receiving_email = 'maib.kamel@gmail.com';
