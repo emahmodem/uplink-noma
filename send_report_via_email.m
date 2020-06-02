@@ -1,13 +1,13 @@
 function [response] = send_report_via_email(subject,report)
 
 % Sending Email
-sending_email = 'concordia.ev.10150@gmail.com';
+sending_email = 'your_sending_email@gmail.com';
 mail_server = 'smtp.gmail.com';
 user_name = '';
 password = '';
 
 
-receiving_email = 'maib.kamel@gmail.com';
+receiving_email = 'your_receiving_email@gmail.com';
 
 
 % Set Sending Email credentials
